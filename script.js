@@ -6,7 +6,7 @@ const proxy = ' https://corsproxy.io/?'
 const CHART_API_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=9&page=1&sparkline=false`;
 const chartsGrid = document.querySelector('.charts-grid');
 const apiKey = '0a56b0288e8a436c937ef2c4d6e2e627'; 
-const apiUrl = `https://newsapi.org/v2/everything?q=crypto&from=2025-01-28&sortBy=publishedAt&apiKey=${apiKey}`;
+const apiUrl = `${proxy}https://newsapi.org/v2/everything?q=crypto&from=2025-01-28&sortBy=publishedAt&apiKey=${apiKey}`;
 const cryptos = [];
 
 // Fetch trending coins and cryptocurrencies concurrently
