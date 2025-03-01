@@ -179,6 +179,7 @@ function createChart(canvasId, coin){
     })
 }
 
+//fetch news data
 async function fetchNewsData() {
     const response = await fetch(apiUrl);
     // check if response was okay
@@ -199,22 +200,25 @@ async function fetchNewsData() {
 
 function displayArticle(article) {
     const newsContainer = document.getElementById('news-container');
-    const newsCard = document.createElement('div');
-    newsCard.classList.add('news-card');
-
-    // Fallback for missing image
-    const imageUrl = article.urlToImage || 'https://via.placeholder.com/150';
-
-    newsCard.innerHTML = `
-        <img src="${imageUrl}" alt="${article.title}" />
-        <div class="news-card-body">
-            <h3>${article.title}</h3>
-            <p>${article.description || 'No description available'}</p>
-            <a href="${article.url}" target="_blank">Read more</a>
-        </div>
-    `;
     
-    newsContainer.appendChild(newsCard);
+    // Limit the articles to the first 8
+    const limitedArticles = data.articles.slice(0, 9);
+    
+    limitedArticles.forEach(article => {
+        const newsCard = document.createElement('div');
+        newsCard.classList.add('news-card');
+
+        newsCard.innerHTML = `
+            <img src="${article.urlToImage}" alt="${article.title}">
+            <div class="news-card-body">
+                <h3>${article.title}</h3>
+                <p>${article.description || 'No description available'}</p>
+                <a href="${article.url}" target="_blank">Read more</a>
+            </div>
+        `;
+
+        newsContainer.appendChild(newsCard);
+    });
 }
 
 // Search filter function
