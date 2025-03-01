@@ -179,42 +179,31 @@ function createChart(canvasId, coin){
     })
 }
 
+//fetch news data
 async function fetchNewsData() {
     const response = await fetch(apiUrl);
     const data = await response.json();
-
-    // Check if articles exist and it's an array
-    if (data.articles && Array.isArray(data.articles)) {
-        // Get the first 9 articles
-        const limitedArticles = data.articles.slice(0, 9);
-
-        // Loop through and display the articles
-        limitedArticles.forEach(article => {
-            displayArticle(article);
-        });
-    } else {
-        console.error("Articles data is not in the expected format.");
-    }
-}
-
-function displayArticle(article) {
+  
     const newsContainer = document.getElementById('news-container');
-    const newsCard = document.createElement('div');
-    newsCard.classList.add('news-card');
-
-    // Fallback for missing image
-    const imageUrl = article.urlToImage || 'https://via.placeholder.com/150';
-
-    newsCard.innerHTML = `
-        <img src="${imageUrl}" alt="${article.title}" />
-        <div class="news-card-body">
-            <h3>${article.title}</h3>
-            <p>${article.description || 'No description available'}</p>
-            <a href="${article.url}" target="_blank">Read more</a>
-        </div>
-    `;
     
-    newsContainer.appendChild(newsCard);
+    // Limit the articles to the first 8
+    const limitedArticles = data.articles.slice(0, 9);
+    
+    limitedArticles.forEach(article => {
+        const newsCard = document.createElement('div');
+        newsCard.classList.add('news-card');
+
+        newsCard.innerHTML = `
+            <img src="${article.urlToImage}" alt="${article.title}">
+            <div class="news-card-body">
+                <h3>${article.title}</h3>
+                <p>${article.description || 'No description available'}</p>
+                <a href="${article.url}" target="_blank">Read more</a>
+            </div>
+        `;
+
+        newsContainer.appendChild(newsCard);
+    });
 }
 
 // Search filter function
