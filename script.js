@@ -188,24 +188,30 @@ async function fetchNewsData() {
   
     const newsContainer = document.getElementById('news-container');
     
-    // Limit the articles to the first 8
-    const limitedArticles = data.articles.slice(0, 9);
+    // Check if data.articles is an array and has elements
+    if (Array.isArray(data.articles) && data.articles.length > 0) {
+        // Limit the articles to the first 9
+        const limitedArticles = data.articles.slice(0, 9);
     
-    limitedArticles.forEach(article => {
-        const newsCard = document.createElement('div');
-        newsCard.classList.add('news-card');
+        limitedArticles.forEach(article => {
+            const newsCard = document.createElement('div');
+            newsCard.classList.add('news-card');
 
-        newsCard.innerHTML = `
-            <img src="${article.urlToImage}" alt="${article.title}">
-            <div class="news-card-body">
-                <h3>${article.title}</h3>
-                <p>${article.description || 'No description available'}</p>
-                <a href="${article.url}" target="_blank">Read more</a>
-            </div>
-        `;
+            newsCard.innerHTML = `
+                <img src="${article.urlToImage}" alt="${article.title}">
+                <div class="news-card-body">
+                    <h3>${article.title}</h3>
+                    <p>${article.description || 'No description available'}</p>
+                    <a href="${article.url}" target="_blank">Read more</a>
+                </div>
+            `;
 
-        newsContainer.appendChild(newsCard);
-    });
+            newsContainer.appendChild(newsCard);
+        });
+    } else {
+        console.error("News data is not in the expected format or empty.");
+        newsContainer.innerHTML = "<p>No news available at the moment.</p>";
+    }
 }
 
 // Search filter function
