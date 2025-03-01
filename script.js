@@ -181,7 +181,8 @@ function createChart(canvasId, coin){
 
 //fetch news data
 async function fetchNewsData() {
-    const response = await fetch(apiUrl);
+    try{
+	    const response = await fetch(apiUrl);
     const data = await response.json();
   
     const newsContainer = document.getElementById('news-container');
@@ -204,6 +205,10 @@ async function fetchNewsData() {
 
         newsContainer.appendChild(newsCard);
     });
+    }catch(err){
+	    console.log(err);
+	     newsContainer.innerHTML = "News are not available for now";
+    }
 }
 
 // Search filter function
