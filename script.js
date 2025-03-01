@@ -182,8 +182,23 @@ function createChart(canvasId, coin){
 //fetch news data
 async function fetchNewsData() {
     const response = await fetch(apiUrl);
+    // check if response was okay
+    if(!response.ok) {
+        // TODO handle this!
+        throw new Error("Response was not okay")
+    }
     const data = await response.json();
-  
+
+    // Get the first 9 articles
+    const limitedArticles = data.articles.slice(0, 9);
+
+    // Loop through and display the articles
+    limitedArticles.forEach(article => {
+        displayArticle(article);
+    });
+}
+
+function displayArticle(article) {
     const newsContainer = document.getElementById('news-container');
     
     // Limit the articles to the first 8
