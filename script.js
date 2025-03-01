@@ -5,9 +5,7 @@ const searchEndpoint = `https://api.coingecko.com/api/v3/coins/list`;
 const proxy = ' https://corsproxy.io/?'
 const CHART_API_URL = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=9&page=1&sparkline=false`;
 const chartsGrid = document.querySelector('.charts-grid');
-//const NEWS_API_KEY = `0a56b0288e8a436c937ef2c4d6e2e627`;
-//const News_API_URL = `https://newsapi.org/v2/everything?q=tesla&from=2025-01-28&sortBy=publishedAt&apiKey=${NEWS_API_KEY}`;
-const apiKey = '0a56b0288e8a436c937ef2c4d6e2e627'; // Replace with your actual API key
+const apiKey = '0a56b0288e8a436c937ef2c4d6e2e627'; 
 const apiUrl = `https://newsapi.org/v2/everything?q=crypto&from=2025-01-28&sortBy=publishedAt&apiKey=${apiKey}`;
 const cryptos = [];
 
@@ -184,47 +182,38 @@ function createChart(canvasId, coin){
 async function fetchNewsData() {
     const response = await fetch(apiUrl);
     const data = await response.json();
-  
-    const newsContainer = document.getElementById('news-container');
-    
-    // Check if `data` is an array
-    if (Array.isArray(data)) {
-        // If it's an array, slice the first 9 items
-        const limitedArticles = data.slice(0, 9);
-        limitedArticles.forEach(article => {
-            createNewsCard(article);
-        });
-    }
-    // Check if `data` is an object and contains `articles`
-    else if (data && data.articles && Array.isArray(data.articles)) {
-        // If `data.articles` is an array, slice the first 9 articles
+
+    // Check if articles exist and it's an array
+    if (data.articles && Array.isArray(data.articles)) {
+        // Get the first 9 articles
         const limitedArticles = data.articles.slice(0, 9);
+
+        // Loop through and display the articles
         limitedArticles.forEach(article => {
-            createNewsCard(article);
+            displayArticle(article);
         });
-    }
-    // If it's neither an array nor an object with articles, handle accordingly
-    else {
-        console.error("News data is not in the expected format.");
-        newsContainer.innerHTML = "<p>No news available at the moment.</p>";
+    } else {
+        console.error("Articles data is not in the expected format.");
     }
 }
 
-// Helper function to create a news card
-function createNewsCard(article) {
+function displayArticle(article) {
     const newsContainer = document.getElementById('news-container');
     const newsCard = document.createElement('div');
     newsCard.classList.add('news-card');
 
+    // Fallback for missing image
+    const imageUrl = article.urlToImage || 'https://via.placeholder.com/150';
+
     newsCard.innerHTML = `
-        <img src="${article.urlToImage}" alt="${article.title}">
+        <img src="${imageUrl}" alt="${article.title}" />
         <div class="news-card-body">
             <h3>${article.title}</h3>
             <p>${article.description || 'No description available'}</p>
             <a href="${article.url}" target="_blank">Read more</a>
         </div>
     `;
-
+    
     newsContainer.appendChild(newsCard);
 }
 
