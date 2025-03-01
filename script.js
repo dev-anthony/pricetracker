@@ -181,37 +181,51 @@ function createChart(canvasId, coin){
     })
 }
 
-//fetch news data
 async function fetchNewsData() {
     const response = await fetch(apiUrl);
     const data = await response.json();
   
     const newsContainer = document.getElementById('news-container');
     
-    // Check if data.articles is an array and has elements
-    if (Array.isArray(data.articles) && data.articles.length > 0) {
-        // Limit the articles to the first 9
-        const limitedArticles = data.articles.slice(0, 9);
-    
+    // Check if `data` is an array
+    if (Array.isArray(data)) {
+        // If it's an array, slice the first 9 items
+        const limitedArticles = data.slice(0, 9);
         limitedArticles.forEach(article => {
-            const newsCard = document.createElement('div');
-            newsCard.classList.add('news-card');
-
-            newsCard.innerHTML = `
-                <img src="${article.urlToImage}" alt="${article.title}">
-                <div class="news-card-body">
-                    <h3>${article.title}</h3>
-                    <p>${article.description || 'No description available'}</p>
-                    <a href="${article.url}" target="_blank">Read more</a>
-                </div>
-            `;
-
-            newsContainer.appendChild(newsCard);
+            createNewsCard(article);
         });
-    } else {
-        console.error("News data is not in the expected format or empty.");
+    }
+    // Check if `data` is an object and contains `articles`
+    else if (data && data.articles && Array.isArray(data.articles)) {
+        // If `data.articles` is an array, slice the first 9 articles
+        const limitedArticles = data.articles.slice(0, 9);
+        limitedArticles.forEach(article => {
+            createNewsCard(article);
+        });
+    }
+    // If it's neither an array nor an object with articles, handle accordingly
+    else {
+        console.error("News data is not in the expected format.");
         newsContainer.innerHTML = "<p>No news available at the moment.</p>";
     }
+}
+
+// Helper function to create a news card
+function createNewsCard(article) {
+    const newsContainer = document.getElementById('news-container');
+    const newsCard = document.createElement('div');
+    newsCard.classList.add('news-card');
+
+    newsCard.innerHTML = `
+        <img src="${article.urlToImage}" alt="${article.title}">
+        <div class="news-card-body">
+            <h3>${article.title}</h3>
+            <p>${article.description || 'No description available'}</p>
+            <a href="${article.url}" target="_blank">Read more</a>
+        </div>
+    `;
+
+    newsContainer.appendChild(newsCard);
 }
 
 // Search filter function
