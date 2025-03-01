@@ -181,20 +181,20 @@ function createChart(canvasId, coin){
 
 async function fetchNewsData() {
     const response = await fetch(apiUrl);
+    // check if response was okay
+    if(!response.ok) {
+        // TODO handle this!
+        throw new Error("Response was not okay")
+    }
     const data = await response.json();
 
-    // Check if articles exist and it's an array
-    if (data.articles && Array.isArray(data.articles)) {
-        // Get the first 9 articles
-        const limitedArticles = data.articles.slice(0, 9);
+    // Get the first 9 articles
+    const limitedArticles = data.articles.slice(0, 9);
 
-        // Loop through and display the articles
-        limitedArticles.forEach(article => {
-            displayArticle(article);
-        });
-    } else {
-        console.error("Articles data is not in the expected format.");
-    }
+    // Loop through and display the articles
+    limitedArticles.forEach(article => {
+        displayArticle(article);
+    });
 }
 
 function displayArticle(article) {
